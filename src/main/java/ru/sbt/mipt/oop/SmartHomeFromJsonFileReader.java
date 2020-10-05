@@ -14,9 +14,13 @@ public class SmartHomeFromJsonFileReader implements SmartHomeReader {
         this.file = file;
     }
 
-    public SmartHome read() throws IOException {
-        Gson gson = new Gson();
-        String json = new String(Files.readAllBytes(Paths.get(file)));
-        return gson.fromJson(json, SmartHome.class);
+    public SmartHome read() {
+        try {
+            Gson gson = new Gson();
+            String json = new String(Files.readAllBytes(Paths.get(file)));
+            return gson.fromJson(json, SmartHome.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

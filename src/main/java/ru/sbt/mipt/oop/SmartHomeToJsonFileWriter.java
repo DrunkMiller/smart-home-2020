@@ -17,13 +17,15 @@ public class SmartHomeToJsonFileWriter implements SmartHomeWriter{
         this.smartHome = smartHome;
     }
 
-    public void write() throws IOException {
+    public void write() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(smartHome);
         System.out.println(jsonString);
         Path path = Paths.get("output.js");
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(jsonString);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
