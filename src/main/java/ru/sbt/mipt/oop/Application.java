@@ -16,7 +16,7 @@ public class Application {
         eventsManager.addHandler(new LightEventHandler());
         eventsManager.addHandler(new DoorEventHandler());
         eventsManager.addHandler(new HallDoorEventHandler());
-        
+
         EventsReceiver eventsReceiver = new RandomEventsReceiver();
 
         SmartHomeDispatcher smartHomeDispatcher = new SmartHomeDispatcher(

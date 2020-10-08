@@ -5,24 +5,35 @@ import ru.sbt.mipt.oop.devices.Light;
 import ru.sbt.mipt.oop.devices.Room;
 import ru.sbt.mipt.oop.devices.SmartHome;
 
-import static ru.sbt.mipt.oop.events.SensorEventType.DOOR_CLOSED;
-import static ru.sbt.mipt.oop.events.SensorEventType.DOOR_OPEN;
+import static ru.sbt.mipt.oop.events.SensorEventType.*;
 
 public class HallDoorEventHandler implements EventHandler {
+    private Room hallRoom = null;
+    private Door hallDoor = null;
     @Override
     public void handle(SmartHome smartHome, SensorEvent event) {
         if (event.getType() == DOOR_CLOSED) {
-            for (Room room : smartHome.getRooms()) {
-                for (Door door : room.getDoors()) {
-                    if (door.getId().equals(event.getObjectId()) && room.getName().equals("hall")) {
-                        for (Room homeRoom : smartHome.getRooms()) {
-                            for (Light light : homeRoom.getLights()) {
-                                light.turnOff();
-                            }
-                        }
-                    }
+            smartHome.execute(component -> {
+                if (component instanceof Room && ((Room) component).getName().equals("hall")) {
+                    hallRoom = (Room) component;
                 }
+            });
+            if (hallRoom != null) {
+                hallRoom.execute(component -> {
+                    if (component instanceof Door && ((Door) component).getId().equals(event.getObjectId())) {
+                        hallDoor = (Door) component;
+                    }
+                });
             }
+            if (hallDoor != null) {
+                smartHome.execute(component -> {
+                    if (component instanceof Light) {
+                        ((Light) component).turnOff();
+                    }
+                });
+            }
+            hallRoom = null;
+            hallDoor = null;
         }
     }
 }
