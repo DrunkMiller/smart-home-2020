@@ -1,12 +1,13 @@
-package ru.sbt.mipt.oop.events;
+package ru.sbt.mipt.oop.events.handlers;
 import static ru.sbt.mipt.oop.events.SensorEventType.*;
-import ru.sbt.mipt.oop.devices.*;
+import ru.sbt.mipt.oop.components.*;
+import ru.sbt.mipt.oop.events.SensorEvent;
 
 public class LightEventHandler implements EventHandler {
     @Override
-    public void handle(SmartHome smartHome, SensorEvent event) {
+    public void handle(HomeComponent homeComponent, SensorEvent event) {
         if (event.getType() == LIGHT_ON || event.getType() == LIGHT_OFF) {
-            smartHome.execute(component -> {
+            homeComponent.execute(component -> {
                 if (component instanceof Light && ((Light) component).getId().equals(event.getObjectId())) {
                     if (event.getType() == LIGHT_ON) {
                         ((Light) component).turnOn();

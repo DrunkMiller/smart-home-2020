@@ -1,4 +1,4 @@
-package ru.sbt.mipt.oop;
+package ru.sbt.mipt.oop.io;
 
 public interface SmartHomeWriter {
     void write();

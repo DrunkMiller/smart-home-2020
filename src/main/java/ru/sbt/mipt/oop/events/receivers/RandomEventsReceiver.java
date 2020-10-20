@@ -1,4 +1,7 @@
-package ru.sbt.mipt.oop.events;
+package ru.sbt.mipt.oop.events.receivers;
+
+import ru.sbt.mipt.oop.events.SensorEvent;
+import ru.sbt.mipt.oop.events.SensorEventType;
 
 public class RandomEventsReceiver implements EventsReceiver {
 
