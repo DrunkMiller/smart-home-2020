@@ -1,5 +1,3 @@
-package ru.sbt.mipt.oop.events;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.sbt.mipt.oop.SmartHomeFromJsonFileReader;
@@ -8,6 +6,10 @@ import ru.sbt.mipt.oop.devices.Door;
 import ru.sbt.mipt.oop.devices.Light;
 import ru.sbt.mipt.oop.devices.Room;
 import ru.sbt.mipt.oop.devices.SmartHome;
+import ru.sbt.mipt.oop.events.SensorEvent;
+import ru.sbt.mipt.oop.events.handlers.EventHandler;
+import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;

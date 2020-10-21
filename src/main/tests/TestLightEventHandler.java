@@ -1,5 +1,3 @@
-package ru.sbt.mipt.oop.events;
-
 import  static org.junit.jupiter.api.Assertions.*;
 import static ru.sbt.mipt.oop.events.SensorEventType.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +7,9 @@ import ru.sbt.mipt.oop.SmartHomeReader;
 import ru.sbt.mipt.oop.devices.Light;
 import ru.sbt.mipt.oop.devices.Room;
 import ru.sbt.mipt.oop.devices.SmartHome;
+import ru.sbt.mipt.oop.events.SensorEvent;
+import ru.sbt.mipt.oop.events.handlers.EventHandler;
+import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,15 +1,17 @@
-package ru.sbt.mipt.oop.events;
+package ru.sbt.mipt.oop.events.managers;
 
 import ru.sbt.mipt.oop.devices.SmartHome;
+import ru.sbt.mipt.oop.events.handlers.EventHandler;
+import ru.sbt.mipt.oop.events.SensorEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleEventsManager implements EventsManager {
+public class CompositeEventsManager implements EventsManager {
     private final List<EventHandler> handlers;
     private final SmartHome smartHome;
 
-    public SimpleEventsManager(SmartHome smartHome) {
+    public CompositeEventsManager(SmartHome smartHome) {
         this.smartHome = smartHome;
         this.handlers = new ArrayList<>();
     }
