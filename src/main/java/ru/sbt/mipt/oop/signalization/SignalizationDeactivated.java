@@ -1,9 +1,10 @@
 package ru.sbt.mipt.oop.signalization;
 
-public class SignalizationDeactivated extends SignalizationState {
+public class SignalizationDeactivated implements SignalizationState {
+    private Signalization signalization;
 
     public SignalizationDeactivated(Signalization signalization) {
-        super(signalization);
+        this.signalization = signalization;
     }
 
     @Override

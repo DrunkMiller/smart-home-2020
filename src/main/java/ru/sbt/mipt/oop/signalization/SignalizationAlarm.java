@@ -1,10 +1,11 @@
 package ru.sbt.mipt.oop.signalization;
 
-public class SignalizationAlarm extends SignalizationState {
+public class SignalizationAlarm implements SignalizationState {
+    private Signalization signalization;
     private final int code;
 
     public SignalizationAlarm(Signalization signalization, int code) {
-        super(signalization);
+        this.signalization = signalization;
         this.code = code;
     }
 

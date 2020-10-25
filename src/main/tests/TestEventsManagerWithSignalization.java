@@ -16,6 +16,18 @@ import static ru.sbt.mipt.oop.events.SensorEventType.*;
 public class TestEventsManagerWithSignalization {
     private SmartHome smartHome;
     private Light light;
+
+    private Signalization getSignalization(EventsManager manager) {
+        try {
+            Field field = manager.getClass().getDeclaredField("signalization");
+            field.setAccessible(true);
+            return (Signalization) field.get(manager);
+        }
+        catch (Exception ignored) {
+            return null;
+        }
+    }
+
     @BeforeEach
     void setUpSmartHome() {
         light = new Light("1", false);
@@ -28,19 +40,53 @@ public class TestEventsManagerWithSignalization {
     }
 
     @Test
-    public void handle_transitionToAlarm_whenReceivedEvent() throws NoSuchFieldException, IllegalAccessException {
+    public void handle_checkTransitionInActivatedFromDeactivated_whenHandleEventSignalizationActivate() {
         EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
-        manager.addHandler(new SignalizationActivateEventHandler());
         manager.addHandler(new LightEventHandler());
         int signalizationCode = 123;
+        Signalization signalization = getSignalization(manager);
 
-        Field field = manager.getClass().getDeclaredField("signalization");
-        field.setAccessible(true);
-        Signalization signalization = (Signalization) field.get(manager);
+        manager.handleEvent(new SensorEvent(SIGNALIZATION_ACTIVATE, "", signalizationCode));
+
+        assertTrue(signalization.isActivated());
+    }
+
+    @Test
+    public void handle_checkTransitionInDeactivatedFromActivated_whenHandleEventSignalizationDeactivate() throws NoSuchFieldException, IllegalAccessException {
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
+        manager.addHandler(new LightEventHandler());
+        int signalizationCode = 123;
+        Signalization signalization = getSignalization(manager);
+
+        manager.handleEvent(new SensorEvent(SIGNALIZATION_ACTIVATE, "", signalizationCode));
+        manager.handleEvent(new SensorEvent(SIGNALIZATION_DEACTIVATE, "", signalizationCode));
+
+        assertTrue(signalization.isDeactivated());
+    }
+
+    @Test
+    public void handle_checkTransitionInDeactivatedFromAlarm_whenHandleEventSignalizationDeactivate() {
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
+        manager.addHandler(new LightEventHandler());
+        int signalizationCode = 123;
+        Signalization signalization = getSignalization(manager);
 
         manager.handleEvent(new SensorEvent(SIGNALIZATION_ACTIVATE, "", signalizationCode));
         manager.handleEvent(new SensorEvent(LIGHT_ON, "1"));
+        manager.handleEvent(new SensorEvent(SIGNALIZATION_DEACTIVATE, "", signalizationCode));
+        
+        assertTrue(signalization.isDeactivated());
+    }
 
+    @Test
+    public void handle_transitionToAlarm_whenReceivedEvent() throws NoSuchFieldException, IllegalAccessException {
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
+        manager.addHandler(new LightEventHandler());
+        int signalizationCode = 123;
+        Signalization signalization = getSignalization(manager);
+
+        manager.handleEvent(new SensorEvent(SIGNALIZATION_ACTIVATE, "", signalizationCode));
+        manager.handleEvent(new SensorEvent(LIGHT_ON, "1"));
 
         assertTrue(signalization.isAlarm());
     }

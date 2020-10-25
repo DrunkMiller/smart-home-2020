@@ -3,31 +3,23 @@ package ru.sbt.mipt.oop.events.managers;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.events.handlers.EventHandler;
-import ru.sbt.mipt.oop.events.handlers.SignalizationActivateEventHandler;
-import ru.sbt.mipt.oop.events.handlers.SignalizationDeactivateEventHandler;
 import ru.sbt.mipt.oop.signalization.Signalization;
 
-import java.util.ArrayList;
-import java.util.List;
+import static ru.sbt.mipt.oop.events.SensorEventType.*;
 
-public class EventsManagerWithSignalization extends EventsManagerDecorator {
+
+public class EventsManagerWithSignalization implements EventsManager {
+    private final EventsManager decorated;
     private Signalization signalization;
-    private final List<EventHandler> signalizationHandlers;
 
     public EventsManagerWithSignalization(EventsManager decorated) {
-        super(decorated);
+        this.decorated = decorated;
         this.signalization = new Signalization();
-        this.signalizationHandlers = new ArrayList<>();
     }
 
     @Override
     public void addHandler(EventHandler handler) {
-        if (handler instanceof SignalizationActivateEventHandler || handler instanceof SignalizationDeactivateEventHandler) {
-            signalizationHandlers.add(handler);
-        }
-        else {
-            super.addHandler(handler);
-        }
+        decorated.addHandler(handler);
     }
 
     @Override
@@ -36,7 +28,7 @@ public class EventsManagerWithSignalization extends EventsManagerDecorator {
             handleSignalizationEvent(event);
         }
         else if (signalization.isDeactivated()) {
-            super.handleEvent(event);
+            decorated.handleEvent(event);
         }
         else if (signalization.isActivated()) {
             signalization.alarm();
@@ -48,8 +40,11 @@ public class EventsManagerWithSignalization extends EventsManagerDecorator {
     }
 
     private void handleSignalizationEvent(SensorEvent event) {
-        for (EventHandler handler : signalizationHandlers) {
-            handler.handle(signalization, event);
+        if (event.getType() == SIGNALIZATION_ACTIVATE) {
+            signalization.activate((Integer) event.getEventArgs());
+        }
+        else if (event.getType() == SIGNALIZATION_DEACTIVATE) {
+            signalization.deactivate((Integer) event.getEventArgs());
         }
     }
 
