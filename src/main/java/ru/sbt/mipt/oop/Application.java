@@ -7,6 +7,7 @@ import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
 import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
 import ru.sbt.mipt.oop.events.managers.EventsManager;
 import ru.sbt.mipt.oop.events.managers.CompositeEventsManager;
+import ru.sbt.mipt.oop.events.managers.EventsManagerWithSignalization;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class Application {
 
         SmartHomeDispatcher smartHomeDispatcher = new SmartHomeDispatcher(
                 smartHome,
-                eventsManager,
+                new EventsManagerWithSignalization(eventsManager),
                 eventsReceiver
         );
         smartHomeDispatcher.start();
