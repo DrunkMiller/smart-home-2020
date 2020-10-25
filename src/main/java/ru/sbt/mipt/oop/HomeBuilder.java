@@ -2,6 +2,10 @@ package ru.sbt.mipt.oop;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import ru.sbt.mipt.oop.devices.Door;
+import ru.sbt.mipt.oop.devices.Light;
+import ru.sbt.mipt.oop.devices.Room;
+import ru.sbt.mipt.oop.devices.SmartHome;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
