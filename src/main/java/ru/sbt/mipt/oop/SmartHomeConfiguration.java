@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import rc.RemoteControlRegistry;
+import ru.sbt.mipt.oop.devices.Light;
 import ru.sbt.mipt.oop.devices.SmartHome;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.events.handlers.DoorEventHandler;
@@ -16,10 +18,12 @@ import ru.sbt.mipt.oop.events.managers.EventsManager;
 import ru.sbt.mipt.oop.events.managers.EventsManagerWithSignalization;
 import ru.sbt.mipt.oop.events.managers.adapters.EventHandlerCCAdapter;
 import ru.sbt.mipt.oop.events.managers.adapters.EventTypeMapper;
+import ru.sbt.mipt.oop.remote.Command;
+import ru.sbt.mipt.oop.remote.SmartHomeRemoteController;
+import ru.sbt.mipt.oop.remote.commands.*;
+import ru.sbt.mipt.oop.signalization.Signalization;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Configuration
 public class SmartHomeConfiguration {
@@ -28,6 +32,16 @@ public class SmartHomeConfiguration {
     SmartHome smartHome() {
         SmartHomeReader reader = new SmartHomeFromJsonFileReader("smart-home-1.js");
         return reader.read();
+    }
+
+    @Bean
+    Signalization signalization() {
+        return new Signalization();
+    }
+
+    @Bean
+    int signalizationCode() {
+        return 123;
     }
 
     @Bean
@@ -64,5 +78,47 @@ public class SmartHomeConfiguration {
         SensorEventsManager sensorEventsManager = new SensorEventsManager();
         sensorEventsManager.registerEventHandler(eventHandlerCCAdapter);
         return sensorEventsManager;
+    }
+
+    @Bean
+    ActivateSignalizationCommand activateSignalizationCommand() {return new ActivateSignalizationCommand(signalization(), signalizationCode());}
+    @Bean
+    AlarmSignalizationCommand alarmSignalizationCommand() {return new AlarmSignalizationCommand(signalization());}
+    @Bean
+    CloseFrontDoorCommand closeFrontDoorCommand() {return new CloseFrontDoorCommand(smartHome());}
+    @Bean
+    TurnOffAllLightsCommand turnOffAllLightsCommand() {return new TurnOffAllLightsCommand(smartHome());}
+    @Bean
+    TurnOnAllLightsCommand turnOnAllLightsCommand() {return new TurnOnAllLightsCommand(smartHome());}
+    @Bean
+    TurnOnLightInHallCommand turnOnLightInHallCommand() {return new TurnOnLightInHallCommand(smartHome());}
+
+    @Bean
+    String remoteControllerId() {
+        return "123";
+    }
+
+    @Bean
+    RemoteControlRegistry remoteControlRegistry() {
+        return new RemoteControlRegistry();
+    }
+
+
+    @Bean
+    SmartHomeRemoteController smartHomeRemoteController(Collection<Command> commands) {
+        List<String> remoteButtonsCodes = Arrays.asList("A", "B", "C", "D", "1", "2", "3", "4");
+        Map<String, Command> registerCommands = new HashMap<>();
+        int remoteButtonsCodesCounter = 0;
+        for (Command command : commands) {
+            if (remoteButtonsCodesCounter > remoteButtonsCodes.size()) break;
+            registerCommands.put(remoteButtonsCodes.get(remoteButtonsCodesCounter), command);
+            remoteButtonsCodesCounter++;
+        }
+        SmartHomeRemoteController remoteController = new SmartHomeRemoteController(registerCommands);
+        remoteControlRegistry().registerRemoteControl(
+                remoteController,
+                remoteControllerId()
+        );
+        return remoteController;
     }
 }
