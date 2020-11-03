@@ -1,6 +1,9 @@
 import  static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.sbt.mipt.oop.SmartHomeConfiguration;
 import ru.sbt.mipt.oop.SmartHomeFromJsonFileReader;
 import ru.sbt.mipt.oop.SmartHomeReader;
 import ru.sbt.mipt.oop.devices.Door;
@@ -15,8 +18,8 @@ public class TestSmartHome {
     private SmartHome smartHome;
     @BeforeEach
     void setUpSmartHome() {
-        SmartHomeReader reader = new SmartHomeFromJsonFileReader("smart-home-1.js");
-        smartHome = reader.read();
+        ApplicationContext context = new AnnotationConfigApplicationContext(SmartHomeConfiguration.class);
+        smartHome = context.getBean(SmartHome.class);
     }
 
     @Test
