@@ -2,7 +2,7 @@ package ru.sbt.mipt.oop;
 
 import ru.sbt.mipt.oop.devices.SmartHome;
 import ru.sbt.mipt.oop.events.EventsReceiver;
-import ru.sbt.mipt.oop.events.EventsManager;
+import ru.sbt.mipt.oop.events.managers.EventsManager;
 import ru.sbt.mipt.oop.events.SensorEvent;
 
 public class SmartHomeDispatcher {
