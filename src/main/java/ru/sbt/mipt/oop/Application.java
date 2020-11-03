@@ -10,16 +10,18 @@ import ru.sbt.mipt.oop.events.managers.CompositeEventsManager;
 import ru.sbt.mipt.oop.events.managers.EventsManagerWithSignalization;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Application {
-    public static void main(String... args) throws IOException {
+    public static void main(String... args) {
         SmartHomeReader reader = new SmartHomeFromJsonFileReader("smart-home-1.js");
         SmartHome smartHome = reader.read();
 
-        EventsManager eventsManager = new CompositeEventsManager(smartHome);
-        eventsManager.addHandler(new LightEventHandler());
-        eventsManager.addHandler(new DoorEventHandler());
-        eventsManager.addHandler(new HallDoorEventHandler());
+        EventsManager eventsManager = new CompositeEventsManager(smartHome, Arrays.asList(
+                new LightEventHandler(),
+                new DoorEventHandler(),
+                new HallDoorEventHandler()
+        ));
 
         EventsReceiver eventsReceiver = new RandomEventsReceiver();
 
