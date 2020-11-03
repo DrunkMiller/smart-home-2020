@@ -1,8 +1,6 @@
 package ru.sbt.mipt.oop;
 
 import com.coolcompany.smarthome.events.SensorEventsManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.sbt.mipt.oop.devices.SmartHome;
@@ -13,7 +11,6 @@ import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
 import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
 import ru.sbt.mipt.oop.events.managers.CompositeEventsManager;
 import ru.sbt.mipt.oop.events.managers.EventsManager;
-import ru.sbt.mipt.oop.events.managers.EventsManagerWithSignalization;
 import ru.sbt.mipt.oop.events.managers.adapters.EventHandlerCCAdapter;
 import ru.sbt.mipt.oop.events.managers.adapters.EventTypeMapper;
 
@@ -39,9 +36,7 @@ public class SmartHomeConfiguration {
 
     @Bean
     EventsManager compositeEventsManager(Collection<EventHandler> handlers) {
-        CompositeEventsManager compositeEventsManager = new CompositeEventsManager(smartHome());
-        handlers.forEach(handler -> compositeEventsManager.addHandler(handler));
-        return compositeEventsManager;
+        return new CompositeEventsManager(smartHome(), handlers);
     }
 
     @Bean
@@ -58,8 +53,7 @@ public class SmartHomeConfiguration {
 
     @Bean
     EventHandlerCCAdapter eventHandlerCCAdapter(EventsManager compositeEventsManager, EventTypeMapper eventTypeMapper) {
-        EventHandlerCCAdapter adapter = new EventHandlerCCAdapter(compositeEventsManager, eventTypeMapper);
-        return adapter;
+        return new EventHandlerCCAdapter(compositeEventsManager, eventTypeMapper);
     }
 
     @Bean

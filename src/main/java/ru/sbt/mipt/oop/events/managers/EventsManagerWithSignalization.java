@@ -18,11 +18,6 @@ public class EventsManagerWithSignalization implements EventsManager {
     }
 
     @Override
-    public void addHandler(EventHandler handler) {
-        decorated.addHandler(handler);
-    }
-
-    @Override
     public void handleEvent(SensorEvent event) {
         if (isSignalizationEvent(event)) {
             handleSignalizationEvent(event);
