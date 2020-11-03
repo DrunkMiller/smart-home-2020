@@ -39,9 +39,7 @@ public class SmartHomeConfiguration {
 
     @Bean
     EventsManager compositeEventsManager(Collection<EventHandler> handlers) {
-        CompositeEventsManager compositeEventsManager = new CompositeEventsManager(smartHome());
-        handlers.forEach(handler -> compositeEventsManager.addHandler(handler));
-        return compositeEventsManager;
+        return new CompositeEventsManager(smartHome(), handlers);
     }
 
     @Bean
@@ -58,8 +56,7 @@ public class SmartHomeConfiguration {
 
     @Bean
     EventHandlerCCAdapter eventHandlerCCAdapter(EventsManager compositeEventsManager, EventTypeMapper eventTypeMapper) {
-        EventHandlerCCAdapter adapter = new EventHandlerCCAdapter(compositeEventsManager, eventTypeMapper);
-        return adapter;
+        return new EventHandlerCCAdapter(compositeEventsManager, eventTypeMapper);
     }
 
     @Bean

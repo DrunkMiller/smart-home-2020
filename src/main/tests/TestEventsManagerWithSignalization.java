@@ -41,8 +41,7 @@ public class TestEventsManagerWithSignalization {
 
     @Test
     public void handle_checkTransitionInActivatedFromDeactivated_whenHandleEventSignalizationActivate() {
-        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
-        manager.addHandler(new LightEventHandler());
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome, Arrays.asList(new LightEventHandler())));
         int signalizationCode = 123;
         Signalization signalization = getSignalization(manager);
 
@@ -53,8 +52,7 @@ public class TestEventsManagerWithSignalization {
 
     @Test
     public void handle_checkTransitionInDeactivatedFromActivated_whenHandleEventSignalizationDeactivate() throws NoSuchFieldException, IllegalAccessException {
-        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
-        manager.addHandler(new LightEventHandler());
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome, Arrays.asList(new LightEventHandler())));
         int signalizationCode = 123;
         Signalization signalization = getSignalization(manager);
 
@@ -66,8 +64,7 @@ public class TestEventsManagerWithSignalization {
 
     @Test
     public void handle_checkTransitionInDeactivatedFromAlarm_whenHandleEventSignalizationDeactivate() {
-        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
-        manager.addHandler(new LightEventHandler());
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome, Arrays.asList(new LightEventHandler())));
         int signalizationCode = 123;
         Signalization signalization = getSignalization(manager);
 
@@ -80,8 +77,7 @@ public class TestEventsManagerWithSignalization {
 
     @Test
     public void handle_transitionToAlarm_whenReceivedEvent() throws NoSuchFieldException, IllegalAccessException {
-        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome));
-        manager.addHandler(new LightEventHandler());
+        EventsManager manager = new EventsManagerWithSignalization(new CompositeEventsManager(smartHome, Arrays.asList(new LightEventHandler())));
         int signalizationCode = 123;
         Signalization signalization = getSignalization(manager);
 
