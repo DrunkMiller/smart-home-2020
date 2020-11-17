@@ -12,10 +12,6 @@ public class SmartHomeRemoteController implements RemoteControl {
         this.registeredCommands = registerCommands;
     }
 
-    public void addCommand(String buttonCode, Command command) {
-        registeredCommands.put(buttonCode, command);
-    }
-
     @Override
     public void onButtonPressed(String buttonCode) {
         if (registeredCommands.containsKey(buttonCode)) {

@@ -8,8 +8,8 @@ import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.events.managers.EventsManager;
 
 public class EventHandlerCCAdapter implements com.coolcompany.smarthome.events.EventHandler {
-    EventsManager manager;
-    EventTypeMapper mapper;
+    private final EventsManager manager;
+    private final EventTypeMapper mapper;
 
     public EventHandlerCCAdapter(EventsManager manager, EventTypeMapper mapper) {
         this.manager = manager;

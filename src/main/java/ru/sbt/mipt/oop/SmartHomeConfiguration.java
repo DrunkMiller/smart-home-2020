@@ -56,8 +56,7 @@ public class SmartHomeConfiguration {
         return new CompositeEventsManager(smartHome(), handlers);
     }
 
-    @Bean
-    EventTypeMapper eventTypeMapper() {
+    Map<String, SensorEventType> eventsNamesByEventsTypes() {
         Map<String, SensorEventType> map = new HashMap<>();
         map.put("LightIsOn", SensorEventType.LIGHT_ON);
         map.put("LightIsOff", SensorEventType.LIGHT_OFF);
@@ -65,7 +64,12 @@ public class SmartHomeConfiguration {
         map.put("DoorIsClosed", SensorEventType.DOOR_CLOSED);
         map.put("DoorIsLocked", SensorEventType.DOOR_CLOSED);
         map.put("DoorIsUnlocked", SensorEventType.DOOR_OPEN);
-        return new EventTypeMapper(map);
+        return map;
+    }
+
+    @Bean
+    EventTypeMapper eventTypeMapper() {
+        return new EventTypeMapper(eventsNamesByEventsTypes());
     }
 
     @Bean
@@ -103,18 +107,20 @@ public class SmartHomeConfiguration {
         return new RemoteControlRegistry();
     }
 
+    Map<String, Command> remoteButtonsByCommands() {
+        Map<String, Command> map = new HashMap<>();
+        map.put("A", activateSignalizationCommand());
+        map.put("B", alarmSignalizationCommand());
+        map.put("C", closeFrontDoorCommand());
+        map.put("D", turnOffAllLightsCommand());
+        map.put("1", turnOnAllLightsCommand());
+        map.put("2", turnOnLightInHallCommand());
+        return map;
+    }
 
     @Bean
     SmartHomeRemoteController smartHomeRemoteController(Collection<Command> commands) {
-        List<String> remoteButtonsCodes = Arrays.asList("A", "B", "C", "D", "1", "2", "3", "4");
-        Map<String, Command> registerCommands = new HashMap<>();
-        int remoteButtonsCodesCounter = 0;
-        for (Command command : commands) {
-            if (remoteButtonsCodesCounter > remoteButtonsCodes.size()) break;
-            registerCommands.put(remoteButtonsCodes.get(remoteButtonsCodesCounter), command);
-            remoteButtonsCodesCounter++;
-        }
-        SmartHomeRemoteController remoteController = new SmartHomeRemoteController(registerCommands);
+        SmartHomeRemoteController remoteController = new SmartHomeRemoteController(remoteButtonsByCommands());
         remoteControlRegistry().registerRemoteControl(
                 remoteController,
                 remoteControllerId()

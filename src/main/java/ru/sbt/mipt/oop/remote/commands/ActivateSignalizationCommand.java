@@ -16,10 +16,6 @@ public class ActivateSignalizationCommand implements Command {
         this.signalizationCode = signalizationCode;
     }
 
-    public void setSignalizationCode(int signalizationCode) {
-        this.signalizationCode = signalizationCode;
-    }
-
     @Override
     public void execute() {
         signalization.activate(signalizationCode);
